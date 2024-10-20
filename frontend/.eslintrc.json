@@ -1,3 +1,12 @@
 {
-  "extends": ["next/core-web-vitals", "next/typescript"]
+  "extends": ["next", "next/core-web-vitals", "prettier"],
+  "plugins": ["prettier", "import", "simple-import-sort", "tailwindcss"],
+  "rules": {
+      "react/no-unescaped-entities": 0,
+      "prettier/prettier": "warn",
+      "simple-import-sort/imports": "warn",
+      "simple-import-sort/exports": "warn",
+      "import/first": "warn",
+      "tailwindcss/classnames-order": "warn"
+  }
 }
