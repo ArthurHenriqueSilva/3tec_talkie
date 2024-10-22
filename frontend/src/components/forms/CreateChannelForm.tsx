@@ -1,0 +1,99 @@
+"use client";
+
+import axios from "axios";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+interface CreateChannelFormData {
+  name: string;
+  password: string;
+}
+
+export default function CreateChannelForm() {
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<CreateChannelFormData>();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<boolean>(false);
+
+  const onSubmit = async (data: CreateChannelFormData) => {
+    setLoading(true);
+    setError(null);
+    setSuccess(false);
+
+    try {
+      await axios.post("/api/channels", data);
+      setSuccess(true);
+      reset();
+    } catch (err) {
+      setError("Failed to Create Channel.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="mx-auto max-w-md rounded bg-white p-4 shadow-2xl"
+    >
+      <h2 className="mb-4 text-xl font-bold">Create a New Channel</h2>
+
+      {error && <div className="mb-4 bg-red-100 p-2 text-red-700">{error}</div>}
+      {success && (
+        <div className="mb-4 bg-green-100 p-2 text-green-700">
+          Channel created successfully!
+        </div>
+      )}
+
+      <div className="mb-4">
+        <label htmlFor="name" className="block text-sm font-medium">
+          Channel Name
+        </label>
+        <input
+          id="name"
+          type="text"
+          {...register("name", { required: "Channel name is required" })}
+          className="mt-1 block w-full rounded border border-gray-300 p-2"
+        />
+        {errors.name && (
+          <span className="text-sm text-red-500">{errors.name.message}</span>
+        )}
+      </div>
+
+      <div className="mb-4">
+        <label htmlFor="password" className="block text-sm font-medium">
+          Password
+        </label>
+        <input
+          id="password"
+          type="password"
+          {...register("password", {
+            required: "Password is required",
+            minLength: {
+              value: 4,
+              message: "Password must be at least 4 characters",
+            },
+          })}
+          className="mt-1 block w-full rounded border border-gray-300 p-2"
+        />
+        {errors.password && (
+          <span className="text-sm text-red-500">
+            {errors.password.message}
+          </span>
+        )}
+      </div>
+
+      <button
+        type="submit"
+        className="w-full rounded bg-blue-500 px-4 py-2 text-white disabled:bg-gray-300"
+        disabled={loading}
+      >
+        {loading ? "Creating..." : "Create Channel"}
+      </button>
+    </form>
+  );
+}
