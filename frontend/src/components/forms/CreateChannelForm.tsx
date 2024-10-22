@@ -3,6 +3,8 @@
 import axios from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+
+import { api } from "@/proxy/proxy";
 interface CreateChannelFormData {
   name: string;
   password: string;
@@ -25,7 +27,7 @@ export default function CreateChannelForm() {
     setSuccess(false);
 
     try {
-      await axios.post("/api/channels", data);
+      await api.post("/api/channels", data);
       setSuccess(true);
       reset();
     } catch (err) {
@@ -89,7 +91,7 @@ export default function CreateChannelForm() {
 
       <button
         type="submit"
-        className="w-full rounded bg-blue-500 px-4 py-2 text-white disabled:bg-gray-300"
+        className="roundedc w-full rounded bg-blue-500 p-2 text-white hover:bg-blue-700"
         disabled={loading}
       >
         {loading ? "Creating..." : "Create Channel"}
