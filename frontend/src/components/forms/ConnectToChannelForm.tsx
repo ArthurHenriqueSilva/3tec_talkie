@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
+import { useSocket } from "@/context/Socket";
 import { Channel } from "@/interface/Channel";
 import { api } from "@/proxy/proxy";
 
@@ -13,6 +14,7 @@ export default function ConnectToChannelForm() {
   const [channels, setChannels] = useState<Channel[]>([]);
   const [filteredChannels, setFilteredChannels] = useState<Channel[]>([]);
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
+  const { connectSocket } = useSocket();
   const router = useRouter();
 
   const checkChannelExists = async () => {
@@ -35,6 +37,7 @@ export default function ConnectToChannelForm() {
         name: channelName,
         password,
       });
+      connectSocket(channelName);
       router.push(`/user/${channelName}`);
     } catch (error) {
       console.error("Erro ao conectar ao canal:", error);

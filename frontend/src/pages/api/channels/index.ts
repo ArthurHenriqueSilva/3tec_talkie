@@ -9,7 +9,7 @@ export default async function handler(
   if (req.method === "POST") {
     const { name, password } = req.body;
     try {
-      const response = await axios.post("http://localhost:4000/channels", {
+      const response = await axios.post("https://localhost:4000/channels", {
         name,
         password,
       });

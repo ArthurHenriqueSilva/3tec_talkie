@@ -1,10 +1,10 @@
 import "./globals.css";
 
 import type { Metadata } from "next";
-import localFont from "next/font/local";
 
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+import { SocketProvider } from "@/context/Socket";
 
 export const metadata: Metadata = {
   title: "Talkie",
@@ -25,13 +25,15 @@ export default function RootLayout({
         />
       </head>
       <body className={"flex min-h-screen flex-col antialiased"}>
-        <Header />
+        <SocketProvider>
+          <Header />
 
-        <main className="flex flex-grow items-center justify-center">
-          {children}
-        </main>
+          <main className="flex flex-grow items-center justify-center">
+            {children}
+          </main>
 
-        <Footer />
+          <Footer />
+        </SocketProvider>
       </body>
     </html>
   );
