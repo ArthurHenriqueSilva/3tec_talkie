@@ -31,4 +31,4 @@ services:
         MYSQL_USER: seu_usuario  # Usuário que você especificou
         MYSQL_PASSWORD: sua_senha  # Senha do usuário
       ports:
-        - '3307:3306'  # Porta do MySQ
+        - '3307:3306'  # Porta do MySQL

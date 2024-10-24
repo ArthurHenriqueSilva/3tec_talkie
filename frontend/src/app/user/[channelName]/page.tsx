@@ -15,21 +15,30 @@ export default function UserPage() {
   };
 
   const startRecording = () => {
-    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-      const mediaRecorder = new MediaRecorder(stream);
-      mediaRecorderRef.current = mediaRecorder;
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      navigator.mediaDevices
+        .getUserMedia({ audio: true })
+        .then((stream) => {
+          const mediaRecorder = new MediaRecorder(stream);
+          mediaRecorderRef.current = mediaRecorder;
 
-      mediaRecorder.ondataavailable = (event) => {
-        if (event.data.size > 0) {
-          event.data.arrayBuffer().then((audioBuffer) => {
-            sendAudio(audioBuffer);
-          });
-        }
-      };
+          mediaRecorder.ondataavailable = (event) => {
+            if (event.data.size > 0) {
+              event.data.arrayBuffer().then((audioBuffer) => {
+                sendAudio(audioBuffer);
+              });
+            }
+          };
 
-      mediaRecorder.start();
-      console.log("Recording started");
-    });
+          mediaRecorder.start();
+          console.log("Recording started");
+        })
+        .catch((error) => {
+          console.error("Error accessing media devices.", error);
+        });
+    } else {
+      console.error("getUserMedia is not supported on this browser.");
+    }
   };
 
   const stopRecording = () => {
