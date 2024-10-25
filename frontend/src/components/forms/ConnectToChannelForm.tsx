@@ -78,30 +78,47 @@ export default function ConnectToChannelForm() {
     <div className="relative w-full max-w-[20rem] rounded border bg-white p-4 shadow-2xl">
       <form
         onSubmit={handleConnect}
-        className="relative mx-auto flex flex-col gap-4 p-4"
+        className="relative mx-auto flex flex-col gap-2 p-4"
       >
-        <input
-          type="text"
-          placeholder="Nome do Canal"
-          value={channelName}
-          onChange={(e) => {
-            setChannelName(e.target.value);
-            setShowDropdown(true);
-          }}
-          onFocus={() => setShowDropdown(true)}
-          onBlur={() => setTimeout(() => setShowDropdown(false), 100)}
-          className="w-full rounded border border-gray-300 p-2"
-          required
-        />
-        <input
-          type="password"
-          placeholder="Senha"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="w-full rounded border border-gray-300 p-2"
-          required
-          disabled={!channelExists}
-        />
+        <div>
+          <label htmlFor="channelName" className="block text-sm font-medium">
+            Nome do Canal
+          </label>
+          <div className="mb-4 flex flex-row items-center rounded border border-gray-300">
+            <i className="fa-solid fa-headset mx-2 text-gray-500"></i>
+            <input
+              type="text"
+              id="channelName"
+              value={channelName}
+              onChange={(e) => {
+                setChannelName(e.target.value);
+                setShowDropdown(true);
+              }}
+              onFocus={() => setShowDropdown(true)}
+              onBlur={() => setTimeout(() => setShowDropdown(false), 100)}
+              className="block w-[90%] p-2 focus:outline-none focus:ring-0"
+              required
+            />
+          </div>
+        </div>
+
+        <div>
+          <label htmlFor="password" className="block text-sm font-medium">
+            Senha
+          </label>
+          <div className="mb-4 flex flex-row items-center rounded border border-gray-300">
+            <i className="fa-solid fa-key mx-2 text-gray-500"></i>
+            <input
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="block w-[90%] p-2 focus:outline-none focus:ring-0"
+              required
+              disabled={!channelExists}
+            />
+          </div>
+        </div>
         {showDropdown && filteredChannels.length > 0 && (
           <ul className="absolute top-16 z-10 w-[90%] rounded border border-gray-300 bg-white p-2 shadow-lg">
             {filteredChannels.map((channel) => (

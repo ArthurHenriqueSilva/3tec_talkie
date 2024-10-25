@@ -55,12 +55,16 @@ export default function CreateChannelForm() {
         <label htmlFor="name" className="block text-sm font-medium">
           Channel Name
         </label>
-        <input
-          id="name"
-          type="text"
-          {...register("name", { required: "Channel name is required" })}
-          className="mt-1 block w-full rounded border border-gray-300 p-2"
-        />
+        <div className="mb-4 flex flex-row items-center rounded border border-gray-300">
+          <i className="fa-solid fa-headset mx-2 text-gray-500"></i>
+          <input
+            id="name"
+            type="text"
+            {...register("name", { required: "Channel name is required" })}
+            className="block w-[90%] p-2 focus:outline-none focus:ring-0"
+          />
+        </div>
+
         {errors.name && (
           <span className="text-sm text-red-500">{errors.name.message}</span>
         )}
@@ -70,18 +74,22 @@ export default function CreateChannelForm() {
         <label htmlFor="password" className="block text-sm font-medium">
           Password
         </label>
-        <input
-          id="password"
-          type="password"
-          {...register("password", {
-            required: "Password is required",
-            minLength: {
-              value: 4,
-              message: "Password must be at least 4 characters",
-            },
-          })}
-          className="mt-1 block w-full rounded border border-gray-300 p-2"
-        />
+        <div className="mb-4 flex flex-row items-center rounded border border-gray-300">
+          <i className="fa-solid fa-key mx-2 text-gray-500"></i>
+          <input
+            id="password"
+            type="password"
+            {...register("password", {
+              required: "Password is required",
+              minLength: {
+                value: 4,
+                message: "Password must be at least 4 characters",
+              },
+            })}
+            className="block w-[90%] p-2 focus:outline-none focus:ring-0"
+          />
+        </div>
+
         {errors.password && (
           <span className="text-sm text-red-500">
             {errors.password.message}
