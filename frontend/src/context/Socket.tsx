@@ -58,10 +58,15 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const playAudio = (audioData: ArrayBuffer) => {
+    console.log("audioData: ", audioData);
     const audioContext = new AudioContext();
+    // console.log("audioContext", audioContext);
     audioContext.decodeAudioData(audioData, (buffer) => {
+      // console.log("buffer: ", buffer);
       const source = audioContext.createBufferSource();
+      // console.log("source: ", source);
       source.buffer = buffer;
+      // console.log("source with buffer: ", source);
       source.connect(audioContext.destination);
       source.start();
     });

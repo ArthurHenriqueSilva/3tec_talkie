@@ -11,26 +11,37 @@ type MicProps = {
 
 export default function Mic({ isMicActive, setIsMicActive }: MicProps) {
   const { sendAudio } = useSocket();
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const mediaStreamRef = useRef<MediaStream | null>(null);
+  const intervalIdRef = useRef<NodeJS.Timeout | null>(null);
 
-  const startRecording = useCallback(() => {
+  const startRecordingChunk = useCallback(() => {
+    if (!mediaStreamRef.current) return;
+
+    const mediaRecorder = new MediaRecorder(mediaStreamRef.current);
+
+    mediaRecorder.ondataavailable = (event) => {
+      if (event.data.size > 0) {
+        event.data.arrayBuffer().then((audioBuffer) => {
+          sendAudio(audioBuffer);
+          console.log("Sent audio data"); // Log do envio do áudio
+        });
+      }
+    };
+
+    mediaRecorder.onstart = () => console.log("Recording started");
+    mediaRecorder.onstop = () => console.log("Recording stopped");
+
+    mediaRecorder.start();
+    setTimeout(() => mediaRecorder.stop(), 1000);
+  }, [sendAudio]);
+
+  const startContinuousRecording = useCallback(() => {
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
       navigator.mediaDevices
         .getUserMedia({ audio: true })
         .then((stream) => {
-          const mediaRecorder = new MediaRecorder(stream);
-          mediaRecorderRef.current = mediaRecorder;
-
-          mediaRecorder.ondataavailable = (event) => {
-            if (event.data.size > 0) {
-              event.data.arrayBuffer().then((audioBuffer) => {
-                sendAudio(audioBuffer);
-              });
-            }
-          };
-
-          mediaRecorder.start();
-          console.log("Recording started");
+          mediaStreamRef.current = stream;
+          intervalIdRef.current = setInterval(startRecordingChunk, 1000); // Intervalo de 1 segundo
         })
         .catch((error) => {
           console.error("Error accessing media devices.", error);
@@ -38,34 +49,36 @@ export default function Mic({ isMicActive, setIsMicActive }: MicProps) {
     } else {
       console.error("getUserMedia is not supported on this browser.");
     }
-  }, [sendAudio]);
+  }, [startRecordingChunk]);
 
-  const stopRecording = useCallback(() => {
-    if (mediaRecorderRef.current) {
-      mediaRecorderRef.current.stop();
-      console.log("Recording stopped");
+  const stopContinuousRecording = useCallback(() => {
+    if (intervalIdRef.current) {
+      clearInterval(intervalIdRef.current);
+      intervalIdRef.current = null;
+    }
+    if (mediaStreamRef.current) {
+      mediaStreamRef.current.getTracks().forEach((track) => track.stop());
+      mediaStreamRef.current = null;
     }
   }, []);
 
   useEffect(() => {
     if (isMicActive) {
-      startRecording();
+      startContinuousRecording();
     } else {
-      stopRecording();
+      stopContinuousRecording();
     }
 
     return () => {
-      if (mediaRecorderRef.current) {
-        stopRecording();
-      }
+      stopContinuousRecording();
     };
-  }, [isMicActive, startRecording, stopRecording]);
+  }, [isMicActive, startContinuousRecording, stopContinuousRecording]);
 
-  // Pressione e segure para iniciar/parar gravação
+  // Iniciar ou parar a gravação ao pressionar o mouse
   const handleMicMouseDown = () => setIsMicActive(true);
   const handleMicMouseUp = () => setIsMicActive(false);
 
-  // Tecla de atalho para iniciar/parar gravação (exemplo: "K")
+  // Atalhos de teclado para iniciar/parar a gravação
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key.toLowerCase() === "k") {
