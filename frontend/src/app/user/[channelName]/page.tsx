@@ -1,7 +1,6 @@
-// UserPage.tsx
 "use client";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import Mic from "@/components/Mic";
 import { useSocket } from "@/context/Socket";
@@ -15,18 +14,28 @@ export default function UserPage() {
     router.push("/");
   };
 
+  useEffect(() => {
+    if (!channelName) {
+      router.push("/");
+    }
+  });
+
   return (
-    <div className="flex h-screen flex-col items-center justify-center gap-4">
-      <h1 className="mb-4 text-2xl">Canal: {channelName}</h1>
+    <div className="flex h-screen w-full flex-col items-center justify-center gap-4">
+      <div className="relative flex w-56 flex-col gap-10 rounded border bg-white p-4 shadow-2xl">
+        <h1 className="mb-4 rounded border border-gray-200 bg-gray-200 p-2 text-center text-2xl">
+          {channelName}
+        </h1>
 
-      <Mic isMicActive={isMicActive} setIsMicActive={setIsMicActive} />
+        <Mic isMicActive={isMicActive} setIsMicActive={setIsMicActive} />
 
-      <button
-        onClick={handleDisconnect}
-        className="rounded bg-blue-500 p-2 text-white hover:bg-blue-600"
-      >
-        Leave Channel
-      </button>
+        <button
+          onClick={handleDisconnect}
+          className="rounded bg-blue-500 p-2 text-white hover:bg-blue-600"
+        >
+          Desconectar
+        </button>
+      </div>
     </div>
   );
 }

@@ -1,4 +1,3 @@
-// MicrophoneControl.tsx
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -23,7 +22,7 @@ export default function Mic({ isMicActive, setIsMicActive }: MicProps) {
       if (event.data.size > 0) {
         event.data.arrayBuffer().then((audioBuffer) => {
           sendAudio(audioBuffer);
-          console.log("Sent audio data"); // Log do envio do áudio
+          console.log("Sent audio data");
         });
       }
     };
@@ -32,16 +31,19 @@ export default function Mic({ isMicActive, setIsMicActive }: MicProps) {
     mediaRecorder.onstop = () => console.log("Recording stopped");
 
     mediaRecorder.start();
-    setTimeout(() => mediaRecorder.stop(), 1000);
+    setTimeout(() => mediaRecorder.stop(), 500);
   }, [sendAudio]);
 
   const startContinuousRecording = useCallback(() => {
-    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-      navigator.mediaDevices
-        .getUserMedia({ audio: true })
+    const getUserMedia = navigator.mediaDevices.getUserMedia.bind(
+      navigator.mediaDevices,
+    );
+
+    if (getUserMedia) {
+      getUserMedia({ audio: true })
         .then((stream) => {
           mediaStreamRef.current = stream;
-          intervalIdRef.current = setInterval(startRecordingChunk, 1000); // Intervalo de 1 segundo
+          intervalIdRef.current = setInterval(startRecordingChunk, 500);
         })
         .catch((error) => {
           console.error("Error accessing media devices.", error);

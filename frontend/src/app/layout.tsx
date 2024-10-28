@@ -17,18 +17,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="overflow-hidden">
       <head>
         <link
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
         />
       </head>
-      <body className={"flex min-h-screen flex-col antialiased"}>
+      <body
+        className={"flex min-h-screen flex-col overflow-hidden antialiased"}
+      >
         <SocketProvider>
           <Header />
 
-          <main className="flex flex-grow items-center justify-center">
+          <main className="my-auto flex items-center justify-center">
             {children}
           </main>
 

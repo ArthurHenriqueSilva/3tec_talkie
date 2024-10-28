@@ -7,7 +7,7 @@ export default function Header() {
   return (
     <header className="fixed left-0 top-2 flex w-full justify-center">
       <Link href={"/"} className="cursor-pointer">
-        <Image src={logo} alt="Logo" className="mx-auto" />
+        <Image src={logo} priority alt="Logo" className="mx-auto" />
       </Link>
     </header>
   );

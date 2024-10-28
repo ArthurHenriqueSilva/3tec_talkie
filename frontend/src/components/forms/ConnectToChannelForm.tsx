@@ -14,6 +14,7 @@ export default function ConnectToChannelForm() {
   const [channels, setChannels] = useState<Channel[]>([]);
   const [filteredChannels, setFilteredChannels] = useState<Channel[]>([]);
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
+  const [passwVisible, setPasswVisible] = useState<boolean>(false);
   const { connectSocket } = useSocket();
   const router = useRouter();
 
@@ -74,6 +75,15 @@ export default function ConnectToChannelForm() {
     setShowDropdown(false);
   };
 
+  const handleChannelReset = () => {
+    setChannelName("");
+    setChannelExists(false);
+  };
+
+  const handlePasswVisible = () => {
+    setPasswVisible(!passwVisible);
+  };
+
   return (
     <div className="relative w-full max-w-[20rem] rounded border bg-white p-4 shadow-2xl">
       <form
@@ -99,6 +109,10 @@ export default function ConnectToChannelForm() {
               className="block w-[90%] p-2 focus:outline-none focus:ring-0"
               required
             />
+            <i
+              onClick={handleChannelReset}
+              className="fa-solid fa-eraser mr-2 cursor-pointer text-gray-500 hover:text-gray-400"
+            ></i>
           </div>
         </div>
 
@@ -109,41 +123,48 @@ export default function ConnectToChannelForm() {
           <div className="mb-4 flex flex-row items-center rounded border border-gray-300">
             <i className="fa-solid fa-key mx-2 text-gray-500"></i>
             <input
-              type="password"
+              type={passwVisible ? "text" : "password"}
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              placeholder={!channelExists ? "Selecione um canal" : ""}
               className="block w-[90%] p-2 focus:outline-none focus:ring-0"
               required
               disabled={!channelExists}
             />
+            <i
+              onClick={handlePasswVisible}
+              className={`fa-solid ${passwVisible ? "fa-eye" : "fa-eye-slash"}  mr-2 cursor-pointer text-gray-500 hover:text-gray-400`}
+            ></i>
           </div>
         </div>
         {showDropdown && filteredChannels.length > 0 && (
-          <ul className="absolute top-16 z-10 w-[90%] rounded border border-gray-300 bg-white p-2 shadow-lg">
-            {filteredChannels.map((channel) => (
-              <li
-                key={channel.id}
-                className="cursor-pointer p-2 hover:bg-gray-200"
-                onClick={() => handleChannelClick(channel)}
-              >
-                {channel.name}
-              </li>
-            ))}
-          </ul>
+          <div className="absolute top-20 z-10 mb-4 flex w-[88%] flex-row items-center rounded border border-gray-300 bg-white p-2 shadow-lg ">
+            <ul className="max-h-32 w-full overflow-y-auto">
+              {filteredChannels.map((channel) => (
+                <li
+                  key={channel.id}
+                  className="cursor-pointer rounded p-2 hover:bg-gray-200"
+                  onClick={() => handleChannelClick(channel)}
+                >
+                  {channel.name}
+                </li>
+              ))}
+            </ul>
+          </div>
         )}
 
         <button
           type="submit"
           className="rounded bg-blue-500 p-2 text-white hover:bg-blue-600"
         >
-          Connect
+          Conectar-se
         </button>
         <button
           onClick={() => router.push("/channels/create")}
           className="rounded bg-blue-500 p-2 text-white hover:bg-blue-600"
         >
-          Create Channel
+          Criar Canal
         </button>
       </form>
     </div>
