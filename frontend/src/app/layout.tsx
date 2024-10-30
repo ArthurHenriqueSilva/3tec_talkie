@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import { SocketProvider } from "@/context/Socket";
+import { UserProvider } from "@/context/User";
 
 export const metadata: Metadata = {
   title: "Talkie",
@@ -27,15 +28,17 @@ export default function RootLayout({
       <body
         className={"flex min-h-screen flex-col overflow-hidden antialiased"}
       >
-        <SocketProvider>
-          <Header />
+        <UserProvider>
+          <SocketProvider>
+            <Header />
 
-          <main className="my-auto flex items-center justify-center">
-            {children}
-          </main>
+            <main className="my-auto flex items-center justify-center">
+              {children}
+            </main>
 
-          <Footer />
-        </SocketProvider>
+            <Footer />
+          </SocketProvider>
+        </UserProvider>
       </body>
     </html>
   );

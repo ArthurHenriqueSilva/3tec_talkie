@@ -7,6 +7,7 @@
       "simple-import-sort/imports": "warn",
       "simple-import-sort/exports": "warn",
       "import/first": "warn",
-      "tailwindcss/classnames-order": "warn"
+      "tailwindcss/classnames-order": "warn",
+      "react-hooks/exhaustive-deps": "off"
   }
 }

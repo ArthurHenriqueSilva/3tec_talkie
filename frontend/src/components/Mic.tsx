@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef } from "react";
 
 import { useSocket } from "@/context/Socket";
 
@@ -9,7 +9,7 @@ type MicProps = {
 };
 
 export default function Mic({ isMicActive, setIsMicActive }: MicProps) {
-  const { sendAudio } = useSocket();
+  const { sendAudio, StartTalking, StopTalking } = useSocket();
   const mediaStreamRef = useRef<MediaStream | null>(null);
   const intervalIdRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -46,10 +46,13 @@ export default function Mic({ isMicActive, setIsMicActive }: MicProps) {
           intervalIdRef.current = setInterval(startRecordingChunk, 500);
         })
         .catch((error) => {
-          console.error("Error accessing media devices.", error);
+          console.error(
+            "Error ao acessar dispositivos de media (media devices).",
+            error,
+          );
         });
     } else {
-      console.error("getUserMedia is not supported on this browser.");
+      console.error("getUserMedia não está disponível neste navegador.");
     }
   }, [startRecordingChunk]);
 
@@ -66,8 +69,10 @@ export default function Mic({ isMicActive, setIsMicActive }: MicProps) {
 
   useEffect(() => {
     if (isMicActive) {
+      StartTalking();
       startContinuousRecording();
     } else {
+      StopTalking();
       stopContinuousRecording();
     }
 
@@ -76,11 +81,9 @@ export default function Mic({ isMicActive, setIsMicActive }: MicProps) {
     };
   }, [isMicActive, startContinuousRecording, stopContinuousRecording]);
 
-  // Iniciar ou parar a gravação ao pressionar o mouse
   const handleMicMouseDown = () => setIsMicActive(true);
   const handleMicMouseUp = () => setIsMicActive(false);
 
-  // Atalhos de teclado para iniciar/parar a gravação
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key.toLowerCase() === "k") {

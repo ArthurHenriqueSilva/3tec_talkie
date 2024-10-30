@@ -1,10 +1,8 @@
 "use client";
-
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 export default function Home() {
-  const router = useRouter();
-  useEffect(() => {
-    router.push("/channels/connect/");
-  });
+  return (
+    <div>
+      <h1 className="text-2xl font-bold">Talkie</h1>
+    </div>
+  );
 }

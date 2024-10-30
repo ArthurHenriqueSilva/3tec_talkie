@@ -1,34 +1,20 @@
 services:
   backend:
+    platform: linux/arm64
     build:
       context: ./backend
+    image: arthurhenriquedev/3tec-talkie-backend:latest
     ports:
-      - '4000:3000'  # O backend será acessível apenas localmente
+      - '4000:4000'
     environment:
-      NODE_ENV: production  # Configure outras variáveis de ambiente, se necessário
-      DB_TYPE: mysql
-      DB_HOST: mysql  # Nome do serviço do MySQL
-      DB_PORT: 3307
-      DB_USERNAME: seu_usuario
-      DB_PASSWORD: sua_senha
-      DB_DATABASE: channels_db
-    depends_on:
-      - mysql  # Adicionando dependência do MySQL
+      NODE_ENV: production
 
   frontend:
+    platform: linux/arm64
     build:
       context: ./frontend
+    image: arthurhenriquedev/3tec-talkie-frontend:latest
     ports:
-      - '3000:3000'  # O frontend será acessível externamente
+      - '3000:3000'
     depends_on:
       - backend
-
-  mysql:
-      image: mysql/mysql-server:8.0  # Use uma imagem compatível com ARM
-      environment:
-        MYSQL_ROOT_PASSWORD: sua_senha  # Senha do root (opcional)
-        MYSQL_DATABASE: channels_db  # Cria automaticamente o banco de dados
-        MYSQL_USER: seu_usuario  # Usuário que você especificou
-        MYSQL_PASSWORD: sua_senha  # Senha do usuário
-      ports:
-        - '3307:3306'  # Porta do MySQL
