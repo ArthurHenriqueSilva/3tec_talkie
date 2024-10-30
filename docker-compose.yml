@@ -1,6 +1,5 @@
 services:
   backend:
-    platform: linux/arm64
     build:
       context: ./backend
     image: arthurhenriquedev/3tec-talkie-backend:latest
@@ -10,7 +9,6 @@ services:
       NODE_ENV: production
 
   frontend:
-    platform: linux/arm64
     build:
       context: ./frontend
     image: arthurhenriquedev/3tec-talkie-frontend:latest
